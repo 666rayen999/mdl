@@ -1,0 +1,8 @@
+[package]
+name = "gltf2rnm"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gltf = "1.4.1"
+rnm-3d = "0.1.7"
