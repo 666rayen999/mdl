@@ -104,7 +104,7 @@ let scene = Scene::load(std::fs::read(path).unwrap()).unwrap(); // from file
 
 ## Todo:
 - [ ] Documentation
-- [ ] Create a tool to convert between RNM and other formats (.obj, .gltf, .fbx)
+- [X] Examples to convert from other formats (.obj, .gltf)
 - [ ] Animation support
 - [X] LZ4 Compression (realtime decompression)
 - [X] Features
