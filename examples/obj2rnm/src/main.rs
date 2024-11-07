@@ -62,7 +62,7 @@ fn main() -> Result<(), ()> {
                 .flatten();
 
             rnm_3d::Mesh::new(
-                positions, tex_coords, normals, colors, None, None, indices, material,
+                positions, tex_coords, normals, colors, None, indices, material,
             )
         })
         .collect();

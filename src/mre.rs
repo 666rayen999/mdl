@@ -11,7 +11,7 @@ pub enum Mre {
 impl std::fmt::Debug for Mre {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Texture(_) => f.write_str("Mre::Texture"),
+            Self::Texture(x) => f.write_fmt(format_args!("Texture({x})")),
             Self::Value {
                 metallic: m,
                 roughness: r,
@@ -34,16 +34,6 @@ impl ArchivedMre {
 }
 
 impl Mre {
-    pub const fn new_texture(data: u8) -> Self {
-        Self::Texture(data)
-    }
-    pub const fn new_values(metallic: f32, roughness: f32, emission: f32) -> Self {
-        Self::Value {
-            metallic,
-            roughness,
-            emission,
-        }
-    }
     pub const fn texture(&self) -> Option<u8> {
         match self {
             Self::Texture(t) => Some(*t),

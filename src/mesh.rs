@@ -4,8 +4,7 @@ pub struct Mesh {
     uvs: Option<Vec<[f32; 2]>>,
     normals: Option<Vec<[f32; 3]>>,
     colors: Option<Vec<[f32; 3]>>,
-    tangents: Option<Vec<[f32; 3]>>,
-    bitangents: Option<Vec<[f32; 3]>>,
+    tangents: Option<Vec<[f32; 4]>>,
     indices: Option<Vec<[u16; 3]>>,
     material: Option<u8>,
 }
@@ -18,7 +17,14 @@ impl ArchivedMesh {
             || l != self.normals.as_ref().map(|x| x.len()).unwrap_or(l)
             || l != self.colors.as_ref().map(|x| x.len()).unwrap_or(l)
             || l != self.tangents.as_ref().map(|x| x.len()).unwrap_or(l)
-            || l != self.bitangents.as_ref().map(|x| x.len()).unwrap_or(l)
+            || self
+                .tangents
+                .as_ref()
+                .map(|vec| {
+                    vec.into_iter()
+                        .any(|[_, _, _, w]| f32::from(w).abs() != 1.0)
+                })
+                .unwrap_or(false)
     }
     pub(crate) const fn material(&self) -> Option<u8> {
         match self.material {
@@ -34,8 +40,7 @@ impl Mesh {
         uvs: Option<Vec<[f32; 2]>>,
         normals: Option<Vec<[f32; 3]>>,
         colors: Option<Vec<[f32; 3]>>,
-        tangents: Option<Vec<[f32; 3]>>,
-        bitangents: Option<Vec<[f32; 3]>>,
+        tangents: Option<Vec<[f32; 4]>>,
         indices: Option<Vec<[u16; 3]>>,
         material: Option<u8>,
     ) -> Option<Self> {
@@ -45,7 +50,6 @@ impl Mesh {
             normals,
             colors,
             tangents,
-            bitangents,
             indices,
             material,
         };
@@ -58,6 +62,24 @@ impl Mesh {
         #[cfg(not(feature = "safe"))]
         Some(ret)
     }
+    pub fn positions(&self) -> &[[f32; 3]] {
+        &self.positions
+    }
+    pub fn uvs(&self) -> Option<&[[f32; 2]]> {
+        self.uvs.as_deref()
+    }
+    pub fn normals(&self) -> Option<&[[f32; 3]]> {
+        self.normals.as_deref()
+    }
+    pub fn colors(&self) -> Option<&[[f32; 3]]> {
+        self.colors.as_deref()
+    }
+    pub fn tangents(&self) -> Option<&[[f32; 4]]> {
+        self.tangents.as_deref()
+    }
+    pub fn indices(&self) -> Option<&[[u16; 3]]> {
+        self.indices.as_deref()
+    }
     pub const fn material(&self) -> Option<u8> {
         self.material
     }
@@ -68,6 +90,10 @@ impl Mesh {
             || l != self.normals.as_ref().map(|x| x.len()).unwrap_or(l)
             || l != self.colors.as_ref().map(|x| x.len()).unwrap_or(l)
             || l != self.tangents.as_ref().map(|x| x.len()).unwrap_or(l)
-            || l != self.bitangents.as_ref().map(|x| x.len()).unwrap_or(l)
+            || self
+                .tangents
+                .as_ref()
+                .map(|vec| vec.into_iter().any(|[_, _, _, w]| w.abs() != 1.0))
+                .unwrap_or(false)
     }
 }
